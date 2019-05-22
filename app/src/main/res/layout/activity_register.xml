@@ -12,7 +12,9 @@
         android:layout_gravity="center"
         android:id="@+id/imgImage"
         android:layout_width="200dp"
-        android:layout_height="200dp" />
+        android:layout_height="200dp"
+        android:src="@drawable/download"
+        />
     <EditText
         android:id="@+id/etName"
         android:layout_width="match_parent"
