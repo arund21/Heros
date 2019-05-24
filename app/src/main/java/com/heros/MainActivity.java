@@ -3,31 +3,35 @@ package com.heros;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import MyAPI.MyAPI;
+import adapter.HeroesAdapter;
 import model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import url.Url;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView tvData;
-    private Button btnAddUser;
+   private RecyclerView recyclerView;
+   private Button btnAddUser;
 
-    private static final String BASE_URL="http://10.0.2.2:3000/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tvData = findViewById(R.id.tvData);
+
         btnAddUser = findViewById(R.id.btnAddUser);
 
         btnAddUser.setOnClickListener(new View.OnClickListener() {
@@ -38,40 +42,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        recyclerView= findViewById(R.id.recyclerView);
+        getAllHeroes();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        MyAPI myAPI = retrofit.create(MyAPI.class);
-
-        Call<List<User>> listCall = myAPI.getUser();
+    }
+    private void getAllHeroes(){
+        MyAPI myAPI = Url.getInstance().create(MyAPI.class);
+        Call<List<User>> listCall = myAPI.getAllHeroes();
 
         listCall.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if (!response.isSuccessful()){
-                    tvData.setText("Code: " + response.code());
+                    Toast.makeText(MainActivity.this,"Code" + response.code(),Toast.LENGTH_LONG).show();
                     return;
                 }
-
                 List<User> userList = response.body();
-                for (User user : userList){
-                    String content = "";
-                    content += "ID : " + user.getId() + "\n";
-                    content += "Image : " + user.getImage() + "\n";
-                    content += "Name : " + user.getName() + "\n";
-                    content += "Description : " + user.getDesc() + "\n";
+                //pass List to the Adapter class
+                HeroesAdapter contactAdapter = new HeroesAdapter(userList, MainActivity.this);
 
-                    tvData.append(content);
-                }
+                recyclerView.setAdapter(contactAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
             }
-
 
             @Override
             public void onFailure(Call<List<User>> call, Throwable t) {
-            tvData.setText("Error" + t.getLocalizedMessage());
+                    Toast.makeText(MainActivity.this,"Error : " + t.getLocalizedMessage(),Toast.LENGTH_LONG).show();
             }
         });
     }
