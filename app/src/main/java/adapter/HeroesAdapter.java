@@ -22,7 +22,7 @@ import java.util.List;
 import model.User;
 import url.Url;
 
-public class HeroesAdapter extends RecyclerView.Adapter<HeroesAdapter.ViewHolder> {
+public class HeroesAdapter extends RecyclerView.Adapter<HeroesAdapter.HeroViewHolder> {
 
     private List<User> userList;
     private Context context;
@@ -34,12 +34,12 @@ public class HeroesAdapter extends RecyclerView.Adapter<HeroesAdapter.ViewHolder
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public HeroViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.activity_dashboard, viewGroup, false);
 
 
-        return new ViewHolder(view);
+        return new HeroViewHolder(view);
     }
 
     private void StrictMode() {
@@ -48,7 +48,7 @@ public class HeroesAdapter extends RecyclerView.Adapter<HeroesAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull HeroViewHolder viewHolder, int i) {
         User user = userList.get(i);
         String imgPath = Url.BASE_URL + "uploads/" + user.getImage();
         StrictMode();
@@ -67,13 +67,13 @@ public class HeroesAdapter extends RecyclerView.Adapter<HeroesAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return 0;
+        return userList.size();
     }
-    public class ViewHolder extends  RecyclerView.ViewHolder{
+    public class HeroViewHolder extends  RecyclerView.ViewHolder{
         ImageView imgPhoto;
         TextView tvName, tvDesc;
 
-        public ViewHolder(@NonNull View itemView) {
+        public HeroViewHolder(@NonNull View itemView) {
             super(itemView);
             imgPhoto = itemView.findViewById(R.id.imgPhoto);
             tvName = itemView.findViewById(R.id.tvName);

@@ -139,7 +139,7 @@ public class Register extends AppCompatActivity {
                 Toast.makeText(this,"Please Select an image",Toast.LENGTH_LONG).show();
             }
         }
-        Uri uri = data.getData();
+        Uri uri = data.getData();//error
         imagePath = getRealPathFromUri(uri);
         previewImage(imagePath);
     }

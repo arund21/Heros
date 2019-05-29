@@ -48,27 +48,30 @@ public class MainActivity extends AppCompatActivity {
     }
     private void getAllHeroes(){
         MyAPI myAPI = Url.getInstance().create(MyAPI.class);
-        Call<List<User>> listCall = myAPI.getAllHeroes();
+        final Call<List<User>> listCall = myAPI.getAllHeroes();
 
         listCall.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                if (!response.isSuccessful()){
-                    Toast.makeText(MainActivity.this,"Code" + response.code(),Toast.LENGTH_LONG).show();
-                    return;
-                }
-                List<User> userList = response.body();
-                //pass List to the Adapter class
-                HeroesAdapter contactAdapter = new HeroesAdapter(userList, MainActivity.this);
 
-                recyclerView.setAdapter(contactAdapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-            }
+                        if (!response.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, "reponse ", Toast.LENGTH_SHORT).show();
 
-            @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-                    Toast.makeText(MainActivity.this,"Error : " + t.getLocalizedMessage(),Toast.LENGTH_LONG).show();
-            }
-        });
+                        }
+                        List<User> listHero = response.body();
+                        HeroesAdapter heroAdapter = new HeroesAdapter(listHero,MainActivity.this);
+                        recyclerView.setAdapter(heroAdapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<User>> call, Throwable t) {
+                        Toast.makeText(MainActivity.this, "DEtail error ", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+
+
     }
 }
